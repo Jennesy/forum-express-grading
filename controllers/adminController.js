@@ -123,6 +123,18 @@ let adminController = {
       .then(users => {
         return res.render('admin/users', { users })
       })
+  },
+  toggleAdmin: (req, res) => {
+    User.findByPk(req.params.id)
+      .then(user => {
+        user.update({
+          isAdmin: !user.isAdmin
+        })
+          .then((user) => {
+            req.flash('success_messages', 'user was successfully to update')
+            return res.redirect('/admin/users')
+          })
+      })
   }
 }
 
