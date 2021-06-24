@@ -10,12 +10,14 @@ let adminController = {
   getRestaurants: (req, res) => {
     Restaurant.findAll({ raw: true, nest: true, include: [Category] })
       .then(restaurants => {
-        console.log(restaurants[0])
         return res.render('admin/restaurants', { restaurants })
       })
   },
   createRestaurants: (req, res) => {
-    return res.render('admin/create')
+    Category.findAll({ raw: true }).then(categories => {
+      return res.render('admin/create', { categories })
+    }
+    )
   },
   postRestaurant: (req, res) => {
     if (!req.body.name) {
@@ -34,6 +36,7 @@ let adminController = {
           opening_hours: req.body.opening_hours,
           description: req.body.description,
           image: file ? img.data.link : null,
+          CategoryId: req.body.categoryId
         }).then((restaurant) => {
           req.flash('success_messages', 'restaurant was successfully created')
           return res.redirect('/admin/restaurants')
@@ -47,7 +50,8 @@ let adminController = {
         address: req.body.address,
         opening_hours: req.body.opening_hours,
         description: req.body.description,
-        image: null
+        image: null,
+        CategoryId: req.body.categoryId
       }).then((restaurant) => {
         req.flash('success_messages', 'restaurant was successfully created')
         return res.redirect('/admin/restaurants')
@@ -62,8 +66,10 @@ let adminController = {
     })
   },
   editRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
-      return res.render('admin/create', { restaurant: restaurant })
+    return Category.findAll({ raw: true }).then(categories => {
+      return Restaurant.findByPk(req.params.id, { raw: true }).then(restaurant => {
+        return res.render('admin/create', { restaurant, categories })
+      })
     })
   },
   putRestaurant: (req, res) => {
@@ -85,6 +91,7 @@ let adminController = {
               opening_hours: req.body.opening_hours,
               description: req.body.description,
               image: file ? img.data.link : restaurant.image,
+              CategoryId: req.body.categoryId
             })
               .then((restaurant) => {
                 req.flash('success_messages', 'restaurant was successfully to update')
@@ -102,7 +109,8 @@ let adminController = {
             address: req.body.address,
             opening_hours: req.body.opening_hours,
             description: req.body.description,
-            image: restaurant.image
+            image: restaurant.image,
+            CategoryId: req.body.categoryId
           })
             .then((restaurant) => {
               req.flash('success_messages', 'restaurant was successfully to update')
