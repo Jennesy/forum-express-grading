@@ -9,16 +9,22 @@ let restController = {
       nest: true,
       include: [Category]
     }).then(restaurants => {
-      console.log(restaurants[0])
-      console.log('---------------')
       const data = restaurants.map(r => {
         return {
           ...r,
           description: r.description.substring(0, 50)
         }
       })
-      console.log(data[0])
       return res.render('restaurants', { restaurants: data })
+    })
+  },
+  getRestaurant: (req, res) => {
+    Restaurant.findByPk(req.params.id, {
+      raw: true,
+      nest: true,
+      include: [Category]
+    }).then(restaurant => {
+      return res.render('restaurant', { restaurant })
     })
   }
 }
