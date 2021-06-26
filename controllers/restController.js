@@ -1,6 +1,8 @@
 const db = require('../models')
 const Restaurant = db.Restaurant
 const Category = db.Category
+const User = db.User
+const Comment = db.Comment
 
 const pageLimit = 10
 
@@ -50,11 +52,12 @@ let restController = {
   },
   getRestaurant: (req, res) => {
     Restaurant.findByPk(req.params.id, {
-      raw: true,
-      nest: true,
-      include: [Category]
+      include: [
+        Category,
+        { model: Comment, include: [User] }
+      ]
     }).then(restaurant => {
-      return res.render('restaurant', { restaurant })
+      return res.render('restaurant', { restaurant: restaurant.toJSON() })
     })
   }
 }
