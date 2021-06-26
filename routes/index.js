@@ -5,6 +5,7 @@ const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
 const categoryController = require('../controllers/categoryController')
+const commentController = require('../controllers/commentController')
 const authenticated = (req, res, next) => {
   if (helpers.ensureAuthenticated(req)) {
     return next()
@@ -42,7 +43,8 @@ module.exports = (app, passport) => {
   app.get('/admin/categories/:id', authenticatedAdmin, categoryController.getCategories)
   app.put('/admin/categories/:id', authenticatedAdmin, categoryController.putCategory)
   app.delete('/admin/categories/:id', authenticatedAdmin, categoryController.deleteCategory)
-
+  //routes for comments
+  app.post('/comments', authenticated, commentController.postComment)
   //routes for account register/login/logout
   app.get('/signup', userController.signUpPage)
   app.post('/signup', userController.signUp)
