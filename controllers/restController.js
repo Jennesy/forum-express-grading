@@ -60,6 +60,13 @@ let restController = {
       return res.render('restaurant', { restaurant: restaurant.toJSON() })
     })
   },
+  getDashboard: (req, res) => {
+    Restaurant.findByPk(req.params.id, {
+      include: [Category, Comment]
+    }).then(restaurant => {
+      return res.render('dashboard', { restaurant: restaurant.toJSON() })
+    })
+  },
   getFeeds: (req, res) => {
     return Promise.all([
       Restaurant.findAll({
