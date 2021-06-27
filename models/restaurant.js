@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'RestaurantId',
         as: 'FavoritedUsers'
       })
+    }
   };
   Restaurant.init({
     name: DataTypes.STRING,
