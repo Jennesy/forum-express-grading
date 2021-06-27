@@ -12,7 +12,7 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      id: 2,
+      id: 11,
       email: 'user1@example.com',
       password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
       isAdmin: false,
@@ -20,7 +20,7 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date()
     }, {
-      id: 3,
+      id: 21,
       email: 'user2@example.com',
       password: bcrypt.hashSync('12345678', bcrypt.genSaltSync(10), null),
       isAdmin: false,
