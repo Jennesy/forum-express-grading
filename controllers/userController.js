@@ -58,14 +58,17 @@ let userController = {
     }
     return User.findByPk(req.params.id, {
       include: [
-        { model: Comment, include: [Restaurant] },
+        { model: Comment, include: [{ model: Restaurant, attributes: ['id', 'image'] }] },
         { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['id', 'image'] },
         { model: User, as: 'Followings', attributes: ['id', 'image'] },
         { model: User, as: 'Followers', attributes: ['id', 'image'] }
       ]
     }).then(user => {
-      console.log(user.toJSON())
-      return res.render('profile', { user: user.toJSON() })
+      user = {
+        ...user.toJSON(),
+        CommentedRestaurants: Array.from(new Set(user.toJSON().Comments.map(i => JSON.stringify(i.Restaurant)))).map(i => JSON.parse(i))
+      }
+      return res.render('profile', { user })
     })
   },
   editUser: (req, res) => {

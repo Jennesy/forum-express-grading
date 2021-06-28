@@ -8,7 +8,7 @@
         <h5 class="card-title">{{user.name}}</h5>
         <p class="card-text">{{user.email}}</p>
         <p class="card-text">
-          <strong>{{user.Comments.length}}</strong> 已評論餐廳<br>
+          <strong>{{user.CommentedRestaurants.length}}</strong> 已評論餐廳<br>
           <strong>{{user.FavoritedRestaurants.length}}</strong> 收藏的餐廳<br>
           <strong>{{user.Followings.length}}</strong> followings（追蹤者）<br>
           <strong>{{user.Followers.length}}</strong> followers（追隨者）
@@ -40,15 +40,14 @@
     </div>
     <div class="card mb-3">
       <div class="card-header">
-        <strong>{{user.Comments.length}}</strong> 已評論餐廳
+        <strong>{{user.CommentedRestaurants.length}}</strong> 已評論餐廳
       </div>
       <div class="card-body">
         <div class="d-flex flex-wrap">
-          {{#each user.Comments}}
-          <a href="/restaurants/{{this.Restaurant.id}}">
+          {{#each user.CommentedRestaurants}}
+          <a href="/restaurants/{{this.id}}">
             <div class="m-2">
-              <img src="{{this.Restaurant.image}}" style="width:50px;height:50px;object-fit:cover;"
-                class="shadow-sm rounded">
+              <img src="{{this.image}}" style="width:50px;height:50px;object-fit:cover;" class="shadow-sm rounded">
             </div>
           </a>
           {{/each}}
