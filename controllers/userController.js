@@ -54,22 +54,23 @@ let userController = {
   getUser: (req, res) => {
     //prevent access to other user profile
     if (req.user.id !== Number(req.params.id)) {
-      console.log('redirect')
       return res.redirect(`/users/${req.user.id}`)
     }
     return User.findByPk(req.params.id, {
       include: [
-        { model: Comment, include: [Restaurant] }
+        { model: Comment, include: [Restaurant] },
+        { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['id', 'image'] },
+        { model: User, as: 'Followings', attributes: ['id', 'image'] },
+        { model: User, as: 'Followers', attributes: ['id', 'image'] }
       ]
+    }).then(user => {
+      console.log(user.toJSON())
+      return res.render('profile', { user: user.toJSON() })
     })
-      .then(user => {
-        return res.render('profile', { user: user.toJSON() })
-      })
   },
   editUser: (req, res) => {
     //prevent access to other user profile
     if (req.user.id !== Number(req.params.id)) {
-      console.log('redirect')
       return res.redirect(`/users/${req.user.id}`)
     }
     return User.findByPk(req.params.id)
@@ -80,7 +81,6 @@ let userController = {
   putUser: (req, res) => {
     //prevent access to other user profile
     if (req.user.id !== Number(req.params.id)) {
-      console.log('redirect')
       return res.redirect(`/users/${req.user.id}`)
     }
     if (!req.body.name) {
