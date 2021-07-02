@@ -9,5 +9,10 @@ module.exports = {
     return categoryService.postCategory(req, res, (data) => {
       return res.json(data)
     })
+  },
+  putCategory: (req, res) => {
+    return categoryService.putCategory(req, res, (data) => {
+      return res.json(data)
+    })
   }
 }
