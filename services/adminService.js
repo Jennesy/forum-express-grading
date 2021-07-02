@@ -17,7 +17,16 @@ let adminService = {
     return Restaurant.findByPk(req.params.id, { raw: true, nest: true, include: [Category] }).then(restaurant => {
       return callback({ restaurant })
     })
-  }
+  },
+  deleteRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id)
+      .then((restaurant) => {
+        restaurant.destroy()
+          .then((restaurant) => {
+            return callback({ status: 'success', message: '' })
+          })
+      })
+  },
 }
 
 module.exports = adminService
