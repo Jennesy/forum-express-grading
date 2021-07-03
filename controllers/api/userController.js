@@ -33,6 +33,27 @@ let userController = {
         }
       })
     })
+  },
+  signUp: (req, res) => {
+    const { name, email, password, passwordCheck } = req.body
+    if (password !== passwordCheck) {
+      return res.json({ status: 'error', message: '兩次密碼輸入不同！' })
+    } else {
+      // confirm unique user
+      User.findOne({ where: { email } }).then(user => {
+        if (user) {
+          return res.json({ status: 'error', message: '信箱重複！' })
+        } else {
+          User.create({
+            name,
+            email,
+            password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
+          }).then(user => {
+            return res.json({ status: 'success', message: '成功註冊帳號！' })
+          })
+        }
+      })
+    }
   }
 }
 
