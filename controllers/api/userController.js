@@ -3,6 +3,8 @@ const db = require('../../models')
 const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 //JWT
 const jwt = require('jsonwebtoken')
 const passportJWT = require('passport-jwt')
@@ -75,6 +77,43 @@ let userController = {
       }
       return res.json({ user })
     })
+  },
+  putUser: (req, res) => {
+    //prevent access to other user profile
+    if (req.user.id !== Number(req.params.id)) {
+      return res.json({ status: 'error', message: '' })
+    }
+    if (!req.body.name) {
+      return res.json({ status: 'error', message: "name didn't exist" })
+    }
+    const { file } = req
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(req.params.id)
+          .then((user) => {
+            user.update({
+              name: req.body.name,
+              image: file ? img.data.link : user.image
+            })
+              .then((user) => {
+                return res.json({ status: 'success', message: "user was successfully to update" })
+              })
+          })
+      })
+    }
+    else {
+      return User.findByPk(req.params.id)
+        .then((user) => {
+          user.update({
+            name: req.body.name,
+            image: user.image
+          })
+            .then((user) => {
+              return res.json({ status: 'success', message: "user was successfully to update" })
+            })
+        })
+    }
   }
 }
 

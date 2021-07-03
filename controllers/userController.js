@@ -6,9 +6,7 @@ const Restaurant = db.Restaurant
 const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
-const fs = require('fs')
 const imgur = require('imgur-node-api')
-const user = require('../models/user')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 let userController = {
@@ -101,7 +99,7 @@ let userController = {
               image: file ? img.data.link : user.image
             })
               .then((user) => {
-                req.flash('success_messages', '(user was successfully to update')
+                req.flash('success_messages', 'user was successfully to update')
                 res.redirect(`/users/${user.id}`)
               })
           })
