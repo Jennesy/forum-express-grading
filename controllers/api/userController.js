@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const db = require('../../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 //JWT
 const jwt = require('jsonwebtoken')
 const passportJWT = require('passport-jwt')
@@ -54,6 +56,25 @@ let userController = {
         }
       })
     }
+  },
+  getUser: (req, res) => {
+    if (req.user.id !== Number(req.params.id)) {
+      return res.json({ status: 'error', message: '' })
+    }
+    return User.findByPk(req.params.id, {
+      include: [
+        { model: Comment, include: [{ model: Restaurant, attributes: ['id', 'image'] }] },
+        { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['id', 'image'] },
+        { model: User, as: 'Followings', attributes: ['id', 'image'] },
+        { model: User, as: 'Followers', attributes: ['id', 'image'] }
+      ]
+    }).then(user => {
+      user = {
+        ...user.toJSON(),
+        CommentedRestaurants: Array.from(new Set(user.toJSON().Comments.map(i => JSON.stringify(i.Restaurant)))).map(i => JSON.parse(i))
+      }
+      return res.json({ user })
+    })
   }
 }
 
