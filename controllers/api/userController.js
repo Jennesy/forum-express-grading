@@ -3,6 +3,7 @@ const db = require('../../models')
 const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
+const Favorite = db.Favorite
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 //JWT
@@ -114,6 +115,15 @@ let userController = {
             })
         })
     }
+  },
+  addFavorite: (req, res) => {
+    return Favorite.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    })
+      .then((restaurant) => {
+        return res.json({ status: 'success', message: "restaurant was successfully added to favorite" })
+      })
   }
 }
 
